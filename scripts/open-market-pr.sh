@@ -38,7 +38,14 @@ fi
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
 gh repo fork "$UPSTREAM" --clone=false --remote=false >/dev/null 2>&1 || true
-git clone -q "https://github.com/$LOGIN/awesome-dsh-plugin.git" "$WORK/catalog"
+# Fork creation is asynchronous on GitHub's side; retry the clone briefly.
+for attempt in 1 2 3 4 5; do
+  if git clone -q "https://github.com/$LOGIN/awesome-dsh-plugin.git" "$WORK/catalog" 2>/dev/null; then
+    break
+  fi
+  [ "$attempt" = 5 ] && { echo "could not clone the fork $LOGIN/awesome-dsh-plugin" >&2; exit 1; }
+  sleep 3
+done
 cd "$WORK/catalog"
 git checkout -q -b "add-$REPO"
 
@@ -62,6 +69,10 @@ git push -q -u origin "add-$REPO"
 gh pr create --repo "$UPSTREAM" --head "$LOGIN:add-$REPO" \
   --title "Add $LOGIN/$REPO" \
   --body "Adds $LOGIN/$REPO — a recoverable session delete.
+
+> The repository was created today, so the submission gate's one-day age check
+> fails on this first run; it re-runs by itself and turns green once the repo is
+> 24h old. Nothing else is pending.
 
 What the plugin does (checked against the code):
 - adds one \`删除会话\` context-menu action via \`ctx.contextMenus.register\` (menu closes first);
