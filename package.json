@@ -1,0 +1,62 @@
+{
+  "name": "dsh-session-md-purge",
+  "version": "1.5.0",
+  "description": "Adds a 删除会话 action to the session context menu that archives the session and moves the session directory plus the Markdown files that session wrote into a recoverable trash.",
+  "license": "MIT",
+  "author": "hua",
+  "type": "module",
+  "keywords": [
+    "deepseek",
+    "harness",
+    "dsh",
+    "dsh-plugin",
+    "session",
+    "delete",
+    "purge",
+    "trash",
+    "markdown"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cui-CN/dsh-session-md-purge.git"
+  },
+  "homepage": "https://github.com/Cui-CN/dsh-session-md-purge#readme",
+  "bugs": {
+    "url": "https://github.com/Cui-CN/dsh-session-md-purge/issues"
+  },
+  "icon": "icon.svg",
+  "engines": {
+    "dsh": ">=0.2.2-rc.1"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-context-menu",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  }
+}

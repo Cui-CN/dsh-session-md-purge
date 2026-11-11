@@ -1,0 +1,1 @@
+{ "meta": { "title": "Session purge", "description": "Adds a Delete session row to the session menu that moves the session and its markdown files to a recoverable trash." } }
